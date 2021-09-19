@@ -1,0 +1,212 @@
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fleur+De+Leah&display=swap" rel="stylesheet">
+<style>
+    body{
+        margin: 0px;
+        background: #e12104;
+        font-family: 'Fleur De Leah', cursive;
+    }
+    #container{
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    img{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+    #bg{
+        width: 100%;
+        position: relative;
+    }
+    .door{
+        cursor: pointer;
+    }
+    #d1{
+        top: 14%;
+        left: 11.9%;
+        width: 7%;
+    }
+    #d12{
+        top: 87.5%;
+        left: 59.9%;
+        width: 7.5%;
+    }
+    #d19{
+        top: 0%;
+        left: 63.5%;
+        width: 7%;
+    }
+    #d20{
+        top: 13%;
+        left: 23.2%;
+        width: 6.5%;
+    }
+    #d22{
+        top: 2%;
+        left: 33.9%;
+        width: 8%;
+    }
+    #d4{
+        top: 0%;
+        left: 3.5%;
+        width: 6.5%;
+    }
+    #d6{
+        top: 29.5%;
+        left: 64%;
+        width: 3.5%;
+    }
+    #d8{
+        top: 57%;
+        left: 92.9%;
+        width: 6.5%;
+    }
+   
+    #container{
+        position: relative;
+    }
+    .gift-tag { 
+      background: #cceef0;
+      border: #dcdcdc;
+      border-radius: 0 2px 2px 0;
+      color: #e12104;
+      display: inline-block;
+      font-size: 20px;
+      height: 140px;
+      left: 0;
+      line-height: 40px;
+      margin: 20px;
+      padding: 0 10px 0 15px;
+      position: relative;
+    position: absolute;
+    left: calc(50% - 120px);
+    top: -600px;
+    width: 280px;
+    font-size: 48px;
+    line-height: 67px;
+    /* height: 132px; */
+    padding: 29px;
+    background: #f8f8f8;
+    border-radius: 5px;
+    transform: rotate(-80deg);
+    }
+    .gift-tag:before { 
+border-bottom: 100px transparent solid;
+    border-right: 71px #f8f8f8 solid;
+    border-top: 104px transparent solid;
+    content: '';
+    height: 0;
+    left: -67px;
+    position: absolute;
+    top: -4px;
+    width: 0;
+    border-radius: 15px;
+    }
+    .gift-tag:after {
+background: #b2bdb9;
+    border: 2px #e12104 solid;
+    border-radius: 50%;
+    content: '';
+    height: 16px;
+    left: -40px;
+    position: absolute;
+    width: 16px;
+    top: 88px;
+    }
+    .gift-tag span{
+        color: darkgreen;
+    }
+    #bg{
+        pointer-events: none;
+    }
+
+</style>
+</head>
+<body>
+    <div id = "container">
+    
+    <img src = 'img/d12.png' id = "d12" class = "door">
+    <img src = 'img/d19.png' id = "d19" class = "door">
+    <img src = 'img/d20.png' id = "d20" class = "door">
+    <img src = 'img/d1.png' id = "d1" class = "door">
+    <img src = 'img/d22.png' id = "d22" class = "door">
+    <img src = 'img/d4.png' id = "d4" class = "door">
+    <img src = 'img/d6.png' id = "d6" class = "door">
+    <img src = 'img/d8.png' id = "d8" class = "door">
+    <img src = 'img/bg.png' id = "bg">
+    </div>
+    <div class="gift-tag">
+        <div id = "gt-to">To: <span>Natalie</span></div>
+        <div id = "gt-from">From: <span>Natalie</span></div>
+    </div>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+    function repos(){
+        d3.select("#container")
+            .style("top", function(){
+                return (.5*(window.innerHeight - this.getBoundingClientRect().height))
+            })
+    }
+    repos()
+    d3.select(window).on('resize', repos)
+    var data = {
+        "d1" : {"from": "Paul", "to": "Ben"},
+        "d12": {"from": "Jim", "to": "Natalie"},
+        "d19": {"from": "Janet", "to": "Sue"},
+        "d8": {"from": "Rebecca", "to": "Hailey"},
+        "d20": {"from": "Hailey", "to": "Jason"},
+        "d4": {"from": "Jason", "to": "Paul"},
+        "d6": {"from": "Natalie", "to": "Bekcy"},
+        "d22": {"from": "Sue", "to": "Jim"}
+    }
+
+
+// sue ->      no paul/Janet           jim             22
+//     nat ->      no jason/sue/ben        becky           6
+//     jason ->    no hailey/nat/Becky     paul            4
+//     ben ->      no paul/hailey/nat      Janet           
+//     hailey ->   no becky/ben/paul       jason           20
+//     becky ->    no jim/janet/jason      hailey          8
+//     janet ->    no ben/jason/jim        sue             19
+//     jim ->      no becky/janet/sue      natalie         12
+//     paul ->     no jim/hailey/natalie   ben             1
+
+    d3.selectAll(".door").on("click", function(){
+        
+        var i = d3.select(this).attr("id");
+        var mt = (i == "d12") ? "-100px" : "100px"
+        d3.select(this).transition().duration(2000).style("margin-top",mt)
+        d3.select(".gift-tag")
+            .transition()
+            .duration(3000)
+            .ease(d3.easeBounce)
+            .style("top", function(){
+                return (.5*window.innerHeight - 100) + "px"
+            })
+            .style("transform", "rotate(20deg)")
+
+        d3.select("#gt-to span").text(data[i]["to"])
+        d3.select("#gt-from span").text(data[i]["from"])
+
+
+            // left: calc(50% - 120px);
+    // top: calc(50% - 100px);
+
+    })
+
+
+</script>    
+</body>
+
+</html>
+
+
+
+
+
+
+
