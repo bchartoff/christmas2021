@@ -12,6 +12,7 @@
     #container{
         max-width: 1000px;
         margin: 0 auto;
+        margin-top: 6%;
     }
     img{
         position: absolute;
@@ -150,8 +151,10 @@ background: #b2bdb9;
                 return (.5*(window.innerHeight - this.getBoundingClientRect().height))
             })
     }
-    repos()
-    d3.select(window).on('resize', repos)
+
+    // repos()
+    // window.setTimeout(repos, 3000)
+    // d3.select(window).on('resize', repos)
     var data = {
         "d1" : {"from": "Paul", "to": "Ben"},
         "d12": {"from": "Jim", "to": "Natalie"},
